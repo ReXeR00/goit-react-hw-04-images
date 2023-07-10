@@ -3,7 +3,7 @@ import { ButtonLoad } from './Button.styled';
 import { useContext } from 'react';
 import { AppContext } from 'components/App/App';
 
-const Button = ({}) => {
+const Button = () => {
   const { loadMore } = useContext(AppContext);
 
   return (
