@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as API from '../../services/PixabayApi';
@@ -6,45 +5,21 @@ import Loader from 'components/Loader/Loader';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
+import { useState, useEffect, useCallback, createContext } from 'react';
 
-class App extends Component {
-  state = {
-    searchName: '',
-    images: [],
-    currentPage: 1,
-    error: null,
-    isLoading: false,
-    totalPages: 0,
-  };
+export const AppContext = createContext();
 
-  componentDidUpdate(_, prevState) {
-    if (
-      prevState.searchName !== this.state.searchName ||
-      prevState.currentPage !== this.state.currentPage
-    ) {
-      this.addImages();
-    }
-  }
+const App = () => {
+  const [searchName, setSearchName] = useState('');
+  const [images, setImages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      currentPage: prevState.currentPage + 1,
-    }));
-  };
-
-  handleSubmit = query => {
-    this.setState({
-      searchName: query,
-      images: [],
-      currentPage: 1,
-    });
-  };
-
-  addImages = async () => {
-    const { searchName, currentPage } = this.state;
+  const addImages = useCallback(async () => {
     try {
-      this.setState({ isLoading: true });
-
+      setIsLoading(true);
       const data = await API.getImages(searchName, currentPage);
 
       if (data.hits.length === 0) {
@@ -55,28 +30,56 @@ class App extends Component {
 
       const normalizedImages = API.normalizedImages(data.hits);
 
-      this.setState(state => ({
-        images: [...state.images, ...normalizedImages],
-        isLoading: false,
-        error: '',
-        totalPages: Math.ceil(data.totalHits / 12),
-      }));
+      setImages(prevImages => [...prevImages, ...normalizedImages]);
+      setIsLoading(false);
+      setTotalPages(Math.ceil(data.totalHits / 12));
     } catch (error) {
-      this.setState({ error: 'Something went wrong!' });
+      setError('Something went wrong!');
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
-  };
+  }, [searchName, currentPage]);
 
-  render() {
-    const { images, isLoading, currentPage, totalPages } = this.state;
+  const loadMore = useCallback(() => {
+    setCurrentPage(prevPage => prevPage + 1);
+  }, []);
 
-    return (
+  const handleSubmit = useCallback(query => {
+    setSearchName(query);
+    setImages([]);
+    setCurrentPage(1);
+  }, []);
+
+  useEffect(() => {
+    if (searchName !== '' && currentPage !== 1) {
+      addImages();
+    }
+  }, [searchName, currentPage, addImages]);
+
+  return (
+    <AppContext.Provider
+      value={{
+        searchName,
+        setSearchName,
+        images,
+        setImages,
+        currentPage,
+        setCurrentPage,
+        setError,
+        isLoading,
+        setIsLoading,
+        totalPages,
+        setTotalPages,
+        addImages,
+        loadMore,
+        handleSubmit,
+      }}
+    >
       <div>
         <ToastContainer transition={Slide} />
-        <Searchbar onSubmit={this.handleSubmit} />
+        <Searchbar />
         {images.length > 0 ? (
-          <ImageGallery images={images} />
+          <ImageGallery />
         ) : (
           <p
             style={{
@@ -90,11 +93,11 @@ class App extends Component {
         )}
         {isLoading && <Loader />}
         {images.length > 0 && totalPages !== currentPage && !isLoading && (
-          <Button onClick={this.loadMore} />
+          <Button />
         )}
       </div>
-    );
-  }
-}
+    </AppContext.Provider>
+  );
+};
 
 export default App;

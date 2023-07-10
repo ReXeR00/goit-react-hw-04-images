@@ -1,10 +1,14 @@
 import PropTypes from 'prop-types';
 import { ButtonLoad } from './Button.styled';
+import { useContext } from 'react';
+import { AppContext } from 'components/App/App';
 
-const Button = ({ onClick }) => {
+const Button = ({}) => {
+  const { loadMore } = useContext(AppContext);
+
   return (
     <div>
-      <ButtonLoad type="button" onClick={onClick}>
+      <ButtonLoad type="button" onClick={loadMore}>
         Load more
       </ButtonLoad>
     </div>

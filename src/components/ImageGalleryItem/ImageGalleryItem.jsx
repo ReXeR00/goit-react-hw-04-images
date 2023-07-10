@@ -1,43 +1,37 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../Modal/Modal';
 import { Item, Img } from './ImageGalleryItem.styled';
+import { useContext } from 'react';
+import { AppContext } from 'components/App/App';
 
-class ImageItem extends Component {
-  state = {
-    showModal: false,
+const ImageItem = () => {
+  const { images } = useContext(AppContext);
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
-
-  render() {
-    const { showModal } = this.state;
-    const { image } = this.props;
-
-    return (
-      <>
-        <Item>
-          <Img
-            src={image.webformatURL}
-            alt={image.tags}
-            onClick={this.toggleModal}
+  return (
+    <>
+      <Item>
+        <Img
+          src={images.webformatURL}
+          alt={images.tags}
+          onClick={toggleModal}
+        />
+        {showModal && (
+          <Modal
+            largeImageURL={images.largeImageURL}
+            tags={images.tags}
+            onClose={toggleModal}
           />
-          {showModal && (
-            <Modal
-              largeImageURL={image.largeImageURL}
-              tags={image.tags}
-              onClose={this.toggleModal}
-            />
-          )}
-        </Item>
-      </>
-    );
-  }
-}
+        )}
+      </Item>
+    </>
+  );
+};
 
 ImageItem.propTypes = {
   image: PropTypes.shape({
