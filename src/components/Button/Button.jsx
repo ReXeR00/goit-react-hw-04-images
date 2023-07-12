@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { ButtonLoad } from './Button.styled';
 import { useContext } from 'react';
 import { AppContext } from 'components/App/App';
@@ -15,8 +14,5 @@ const Button = () => {
   );
 };
 
-Button.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
 
 export default Button;

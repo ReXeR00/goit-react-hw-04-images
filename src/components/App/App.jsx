@@ -5,6 +5,7 @@ import Loader from 'components/Loader/Loader';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
+import { EmptyAlert } from './App.styled';
 import { useState, useEffect, useCallback, createContext } from 'react';
 
 export const AppContext = createContext();
@@ -16,6 +17,17 @@ const App = () => {
   const [, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+
+  const loadMore = useCallback(() => {
+    setCurrentPage(prevPage => prevPage + 1);
+  }, []);
+
+  const handleSubmit = useCallback(query => {
+    setSearchName(query);
+
+    setImages([]);
+    setCurrentPage(1);
+  }, []);
 
   const addImages = useCallback(async () => {
     try {
@@ -39,16 +51,6 @@ const App = () => {
       setIsLoading(false);
     }
   }, [searchName, currentPage]);
-
-  const loadMore = useCallback(() => {
-    setCurrentPage(prevPage => prevPage + 1);
-  }, []);
-
-  const handleSubmit = useCallback(query => {
-    setSearchName(query);
-    setImages([]);
-    setCurrentPage(1);
-  }, []);
 
   useEffect(() => {
     if (searchName !== '' && currentPage !== 1) {
@@ -77,19 +79,11 @@ const App = () => {
     >
       <div>
         <ToastContainer transition={Slide} />
-        <Searchbar />
+        <Searchbar onSubmit={handleSubmit} />
         {images.length > 0 ? (
           <ImageGallery />
         ) : (
-          <p
-            style={{
-              padding: 100,
-              textAlign: 'center',
-              fontSize: 30,
-            }}
-          >
-            Image gallery is empty... 📷
-          </p>
+          <EmptyAlert>Image gallery is empty... 📷</EmptyAlert>
         )}
         {isLoading && <Loader />}
         {images.length > 0 && totalPages !== currentPage && !isLoading && (

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import Modal from '../Modal/Modal';
 import { Item, Img } from './ImageGalleryItem.styled';
 import { useContext } from 'react';
@@ -33,12 +32,6 @@ const ImageItem = () => {
   );
 };
 
-ImageItem.propTypes = {
-  image: PropTypes.shape({
-    webformatURL: PropTypes.string.isRequired,
-    tags: PropTypes.string.isRequired,
-    largeImageURL: PropTypes.string.isRequired,
-  }).isRequired,
-};
+
 
 export default ImageItem;

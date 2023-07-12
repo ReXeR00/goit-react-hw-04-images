@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-const API_KEY = '34523545-f21683fd59bfc3e4e2549fe07';
+const API_KEY = '36355196-03879370df776d99e6cca4b4c';
 
 export const perPage = 12;
 

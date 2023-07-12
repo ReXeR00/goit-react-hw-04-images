@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
-import PropTypes from 'prop-types';
 import {
   SearchForm,
   SearchInput,
@@ -8,11 +7,8 @@ import {
   SearchSpan,
   SearchLogo,
 } from './Searchbar.styled';
-import { useContext } from 'react';
-import { AppContext } from 'components/App/App';
 
-const Searchbar = () => {
-  const { onSubmit } = useContext(AppContext);
+const Searchbar = ({ onSubmit }) => {
   const [inputValue, setinputValue] = useState('');
 
   const handleChange = e => {
@@ -21,9 +17,9 @@ const Searchbar = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const searchQuery = e.target.elements.searchName.value.trim();
-    onSubmit(searchQuery);
-    e.target.reset();
+    onSubmit(inputValue);
+    
+    setinputValue('');
   };
 
   return (
@@ -50,10 +46,6 @@ const Searchbar = () => {
       </SearchForm>
     </header>
   );
-};
-
-Searchbar.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default Searchbar;

@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Overlay, ModalWindow } from './Modal.styled';
 import { useContext } from 'react';
 import { AppContext } from 'components/App/App';
@@ -37,10 +36,6 @@ const Modal = () => {
   );
 };
 
-Modal.propTypes = {
-  largeImageURL: PropTypes.string.isRequired,
-  tags: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
+
 
 export default Modal;
