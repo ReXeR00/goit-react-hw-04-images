@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/goit-react-hw-04-images/static/css/main.baae1159.css",
-    "main.js": "/goit-react-hw-04-images/static/js/main.0b7a0f77.js",
+    "main.js": "/goit-react-hw-04-images/static/js/main.f095edb3.js",
     "static/media/pixabay-logo.png": "/goit-react-hw-04-images/static/media/pixabay-logo.125676de4d9601d4047a.png",
     "index.html": "/goit-react-hw-04-images/index.html",
     "main.baae1159.css.map": "/goit-react-hw-04-images/static/css/main.baae1159.css.map",
-    "main.0b7a0f77.js.map": "/goit-react-hw-04-images/static/js/main.0b7a0f77.js.map"
+    "main.f095edb3.js.map": "/goit-react-hw-04-images/static/js/main.f095edb3.js.map"
   },
   "entrypoints": [
     "static/css/main.baae1159.css",
-    "static/js/main.0b7a0f77.js"
+    "static/js/main.f095edb3.js"
   ]
 }
