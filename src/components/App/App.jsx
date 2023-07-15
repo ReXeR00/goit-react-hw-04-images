@@ -7,7 +7,6 @@ import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
 import { EmptyAlert } from './App.styled';
 import { useState, useEffect, useCallback, createContext } from 'react';
-
 export const AppContext = createContext();
 
 const App = () => {

@@ -1,10 +1,7 @@
 import { useEffect } from 'react';
 import { Overlay, ModalWindow } from './Modal.styled';
-import { useContext } from 'react';
-import { AppContext } from 'components/App/App';
 
-const Modal = () => {
-  const { largeImageURL, tags, onClose } = useContext(AppContext);
+const Modal = ({ largeImageURL, tags, onClose }) => {
   useEffect(() => {
     const handleKeyDown = e => {
       if (e.code === 'Escape') {
@@ -25,6 +22,7 @@ const Modal = () => {
     if (e.currentTarget === e.target) {
       onClose();
     }
+    console.log(largeImageURL);
   };
 
   return (
@@ -35,7 +33,5 @@ const Modal = () => {
     </Overlay>
   );
 };
-
-
 
 export default Modal;
