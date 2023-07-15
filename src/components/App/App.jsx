@@ -18,21 +18,12 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
-  const loadMore = useCallback(() => {
-    setCurrentPage(prevPage => prevPage + 1);
-  }, []);
-
-  const handleSubmit = useCallback(query => {
-    setSearchName(query);
-
-    setImages([]);
-    setCurrentPage(1);
-  }, []);
-
   const addImages = useCallback(async () => {
     try {
+      console.log('Calling addImages...');
       setIsLoading(true);
       const data = await API.getImages(searchName, currentPage);
+      console.log('Response:', data);
 
       if (data.hits.length === 0) {
         return toast.info('Sorry image not found...', {
@@ -40,20 +31,48 @@ const App = () => {
         });
       }
 
-      const normalizedImages = API.normalizedImages(data.hits);
+      const normalizedImage = API.normalizedImages(data.hits);
+      console.log('Normalized Images:', normalizedImage);
 
-      setImages(prevImages => [...prevImages, ...normalizedImages]);
+      setImages(prevImages => {
+        const updatedImages = [...prevImages, ...normalizedImage];
+        console.log('Updated Images:', updatedImages);
+        return updatedImages;
+      });
+
       setIsLoading(false);
       setTotalPages(Math.ceil(data.totalHits / 12));
+      console.log('Total Pages:', totalPages);
     } catch (error) {
       setError('Something went wrong!');
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
-  }, [searchName, currentPage]);
+  }, [searchName, currentPage, totalPages]);
+
+  const handleSubmit = useCallback(
+    async query => {
+      setSearchName(query);
+      setImages([]);
+      setCurrentPage(1);
+
+      // Wywołanie addImages dla currentPage równego 1
+      await addImages();
+    },
+    [addImages]
+  );
+
+  const loadMore = useCallback(() => {
+    setCurrentPage(prevPage => prevPage + 1);
+  }, []);
 
   useEffect(() => {
+    console.log('Calling useEffect...');
+    console.log('searchName:', searchName);
+    console.log('currentPage:', currentPage);
     if (searchName !== '' && currentPage !== 1) {
+      console.log('Calling addImages...');
       addImages();
     }
   }, [searchName, currentPage, addImages]);
@@ -87,7 +106,7 @@ const App = () => {
         )}
         {isLoading && <Loader />}
         {images.length > 0 && totalPages !== currentPage && !isLoading && (
-          <Button />
+          <Button onClick={loadMore} />
         )}
       </div>
     </AppContext.Provider>

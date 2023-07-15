@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import Modal from '../Modal/Modal';
 import { Item, Img } from './ImageGalleryItem.styled';
-import { useContext } from 'react';
-import { AppContext } from 'components/App/App';
 
-const ImageItem = () => {
-  const { images } = useContext(AppContext);
+const ImageItem = ({ image }) => {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
@@ -13,25 +10,17 @@ const ImageItem = () => {
   };
 
   return (
-    <>
-      <Item>
-        <Img
-          src={images.webformatURL}
-          alt={images.tags}
-          onClick={toggleModal}
+    <Item>
+      <Img src={image.webformatURL} alt={image.tags} onClick={toggleModal} />
+      {showModal && (
+        <Modal
+          largeImageURL={image.largeImageURL}
+          tags={image.tags}
+          onClose={toggleModal}
         />
-        {showModal && (
-          <Modal
-            largeImageURL={images.largeImageURL}
-            tags={images.tags}
-            onClose={toggleModal}
-          />
-        )}
-      </Item>
-    </>
+      )}
+    </Item>
   );
 };
-
-
 
 export default ImageItem;

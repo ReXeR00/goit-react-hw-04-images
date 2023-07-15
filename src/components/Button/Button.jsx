@@ -1,18 +1,13 @@
 import { ButtonLoad } from './Button.styled';
-import { useContext } from 'react';
-import { AppContext } from 'components/App/App';
 
-const Button = () => {
-  const { loadMore } = useContext(AppContext);
-
+const Button = ({ onClick }) => {
   return (
     <div>
-      <ButtonLoad type="button" onClick={loadMore}>
+      <ButtonLoad type="button" onClick={onClick}>
         Load more
       </ButtonLoad>
     </div>
   );
 };
-
 
 export default Button;
