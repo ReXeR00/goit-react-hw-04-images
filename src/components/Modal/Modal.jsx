@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Overlay, ModalWindow } from './Modal.styled';
+import { Overlay, ModalWindow, CloseButton } from './Modal.styled';
 
 const Modal = ({ largeImageURL, tags, onClose }) => {
   useEffect(() => {
@@ -28,6 +28,7 @@ const Modal = ({ largeImageURL, tags, onClose }) => {
   return (
     <Overlay onClick={handleBackdropClick}>
       <ModalWindow>
+        <CloseButton onClick={onClose} />
         <img src={largeImageURL} alt={tags} />
       </ModalWindow>
     </Overlay>

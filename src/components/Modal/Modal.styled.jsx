@@ -17,3 +17,49 @@ export const ModalWindow = styled.div`
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
 `;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 60px;
+  display: block;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1300;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 4px;
+    height: 25px;
+    transform-origin: center;
+    background: white;
+    transition: all ease-out 280ms;
+  }
+
+  &:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:hover {
+    transform: scale(1.2); /* Powiększenie po najechaniu */
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+`;
