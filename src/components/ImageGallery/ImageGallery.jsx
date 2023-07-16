@@ -1,12 +1,7 @@
 import { List } from './ImageGallery.styled';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-import React, { useContext } from 'react';
-import { AppContext } from 'components/App/App';
 
-const ImageGallery = () => {
-  const { images } = useContext(AppContext);
-
-
+const ImageGallery = ({ images }) => {
   return (
     <List>
       {images.map(image => (

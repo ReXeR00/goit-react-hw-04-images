@@ -6,8 +6,7 @@ import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
 import { EmptyAlert } from './App.styled';
-import { useState, useEffect, useCallback, createContext } from 'react';
-export const AppContext = createContext();
+import { useState, useEffect } from 'react';
 
 const App = () => {
   const [searchName, setSearchName] = useState('');
@@ -17,88 +16,65 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
-  const addImages = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await API.getImages(searchName, currentPage);
-
-      if (data.hits.length === 0) {
-        return toast.info('Sorry image not found...', {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      }
-
-      const normalizedImage = API.normalizedImages(data.hits);
-
-      setImages(prevImages => {
-        const updatedImages = [...prevImages, ...normalizedImage];
-        return updatedImages;
-      });
-
-      setIsLoading(false);
-      setTotalPages(Math.ceil(data.totalHits / 12));
-    } catch (error) {
-      setError('Something went wrong!');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (searchName === '') {
+      return;
     }
+
+    const addImages = async () => {
+      try {
+        setIsLoading(true);
+        const data = await API.getImages(searchName, currentPage);
+
+        if (data.hits.length === 0) {
+          return toast.info('Sorry image not found...', {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+
+        const normalizedImage = API.normalizedImages(data.hits);
+
+        setImages(prevImages => {
+          const updatedImages = [...prevImages, ...normalizedImage];
+          return updatedImages;
+        });
+
+        setIsLoading(false);
+        setTotalPages(Math.ceil(data.totalHits / 12));
+      } catch (error) {
+        setError('Something went wrong!');
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    addImages();
   }, [searchName, currentPage]);
 
-  const handleSubmit = useCallback(
-    async query => {
-      setSearchName(query);
-      setImages([]);
-      setCurrentPage(1);
+  const handleSubmit = async query => {
+    setSearchName(query);
+    setCurrentPage(1);
+    setImages([]);
+  };
 
-      await addImages();
-    },
-    [addImages]
-  );
-
-  const loadMore = useCallback(() => {
+  const loadMore = () => {
     setCurrentPage(prevPage => prevPage + 1);
-  }, []);
-
-  useEffect(() => {
-    if (searchName !== '' && currentPage !== 1) {
-      addImages();
-    }
-  }, [searchName, currentPage, addImages]);
+  };
 
   return (
-    <AppContext.Provider
-      value={{
-        searchName,
-        setSearchName,
-        images,
-        setImages,
-        currentPage,
-        setCurrentPage,
-        setError,
-        isLoading,
-        setIsLoading,
-        totalPages,
-        setTotalPages,
-        addImages,
-        loadMore,
-        handleSubmit,
-      }}
-    >
-      <div>
-        <ToastContainer transition={Slide} />
-        <Searchbar onSubmit={handleSubmit} />
-        {images.length > 0 ? (
-          <ImageGallery />
-        ) : (
-          <EmptyAlert>Image gallery is empty... 📷</EmptyAlert>
-        )}
-        {isLoading && <Loader />}
-        {images.length > 0 && totalPages !== currentPage && !isLoading && (
-          <Button onClick={loadMore} />
-        )}
-      </div>
-    </AppContext.Provider>
+    <div>
+      <ToastContainer transition={Slide} />
+      <Searchbar onSubmit={handleSubmit} />
+      {images.length > 0 ? (
+        <ImageGallery images={images} />
+      ) : (
+        <EmptyAlert>Image gallery is empty... 📷</EmptyAlert>
+      )}
+      {isLoading && <Loader />}
+      {images.length > 0 && totalPages !== currentPage && !isLoading && (
+        <Button onClick={loadMore} />
+      )}
+    </div>
   );
 };
 

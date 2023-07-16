@@ -8,6 +8,7 @@ const ImageItem = ({ image }) => {
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+  // console.log(image);
 
   return (
     <Item>
